@@ -1,0 +1,24 @@
+{
+  "comun": {
+    "idioma": "Idioma",
+    "guardar": "Guardar",
+    "cancelar": "Cancelar",
+    "eliminar": "Eliminar",
+    "cargando": "Cargando..."
+  },
+  "menu": {
+    "materias": "Materias",
+    "miDisponibilidad": "Mi disponibilidad"
+  },
+  "login": {
+    "titulo": "Iniciar sesión",
+    "correo": "Correo",
+    "contrasena": "Contraseña",
+    "ingresar": "Ingresar",
+    "ingresando": "Ingresando...",
+    "errorCorreo": "Ingrese un correo válido.",
+    "errorContrasena": "Ingrese la contraseña.",
+    "errorCredenciales": "Correo o contraseña incorrectos.",
+    "errorGeneral": "No se pudo iniciar sesión, intente de nuevo."
+  }
+}
