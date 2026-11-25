@@ -1,0 +1,7 @@
+<label class="selector">
+  <span class="solo-lectores">{{ 'comun.idioma' | translate }}</span>
+  <select [value]="idioma.actual()" (change)="cambiar($event)">
+    <option value="es" lang="es">Español</option>
+    <option value="en" lang="en">English</option>
+  </select>
+</label>
