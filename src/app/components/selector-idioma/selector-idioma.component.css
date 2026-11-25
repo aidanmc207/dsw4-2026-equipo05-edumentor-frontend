@@ -1,0 +1,28 @@
+.selector {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #767676;
+  border-radius: 4px;
+  background: var(--color-panel);
+  color: var(--color-texto);
+  font: inherit;
+}
+
+select:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
