@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
 import { SelectorIdiomaComponent } from './components/selector-idioma/selector-idioma.component';
 import { AuthService } from './services/auth.service';
 
 @Component({
-  imports: [RouterOutlet, MenuComponent, SelectorIdiomaComponent],
+  imports: [CommonModule, RouterOutlet, MenuComponent, SelectorIdiomaComponent],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

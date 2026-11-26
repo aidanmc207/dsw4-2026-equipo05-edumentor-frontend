@@ -1,5 +1,5 @@
-<app-selector-idioma />
-@if (rol()) {
-  <app-menu />
-}
+<div class="idioma-sin-sesion" *ngIf="!rol()">
+  <app-selector-idioma />
+</div>
+<app-menu *ngIf="rol()" />
 <router-outlet />
