@@ -23,3 +23,159 @@ body {
   font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
   line-height: 1.5;
 }
+/* Estilos comunes de las pantallas internas (catálogo y matriz) */
+.contenido {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.contenido h1 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+}
+
+.contenido h2 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+}
+
+.panel {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--color-panel);
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+}
+
+.alerta {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--color-error-fondo);
+  border-left: 4px solid var(--color-error);
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
+.vacio {
+  margin: 0;
+  color: var(--color-texto-suave);
+}
+
+/* Tablas */
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.tabla caption {
+  margin-bottom: 0.75rem;
+  color: var(--color-texto-suave);
+  text-align: left;
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-borde);
+  text-align: left;
+}
+
+.tabla thead th {
+  background: var(--color-fondo);
+}
+
+/* Campos de formulario */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.campo label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #767676;
+  border-radius: 4px;
+  background: var(--color-panel);
+  color: var(--color-texto);
+  font: inherit;
+}
+
+.campo input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.campo-error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 0.875rem;
+}
+
+/* Botones */
+.principal,
+.secundario,
+.peligro {
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.campo input:focus-visible,
+.campo select:focus-visible,
+.principal:focus-visible,
+.secundario:focus-visible,
+.peligro:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+.principal {
+  padding: 0.6rem 1rem;
+  border: 0;
+  background: var(--color-primario);
+  color: #fff;
+  font-weight: 600;
+}
+
+.principal:hover {
+  background: var(--color-primario-oscuro);
+}
+
+.secundario {
+  border: 1px solid var(--color-borde);
+  background: none;
+  color: var(--color-texto);
+}
+
+.secundario:hover {
+  border-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+.peligro {
+  border: 1px solid var(--color-error);
+  background: none;
+  color: var(--color-error);
+}
+
+.peligro:hover {
+  background: var(--color-error-fondo);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

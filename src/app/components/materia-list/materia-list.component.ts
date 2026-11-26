@@ -1,20 +1,24 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { MateriaService } from '../../services/materia.service';
 import { Materia } from '../../models/materia.model';
 
 @Component({
   selector: 'app-materia-list',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './materia-list.component.html',
+  styleUrl: './materia-list.component.css',
 })
 export class MateriaListComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private materiaService = inject(MateriaService);
+  private traductor = inject(TranslateService);
 
   materias = signal<Materia[]>([]);
+  // Guarda la llave de traducción del mensaje (o el detalle que manda el backend)
   mensaje = signal('');
   editandoId = signal<number | null>(null);
   esCoordinador = inject(AuthService).rol() === 'COORDINADOR';
@@ -33,14 +37,20 @@ export class MateriaListComponent implements OnInit {
   cargarMaterias(): void {
     this.materiaService.obtenerMaterias().subscribe({
       next: (data) => this.materias.set(data),
-      error: (err) => this.mensaje.set(err?.error?.detail ?? 'No se pudieron cargar las materias.'),
+      error: (err) => this.mensaje.set(err?.error?.detail ?? 'materias.errorCargar'),
     });
+  }
+
+  // Para no repetir la condición en el aria-invalid, el aria-describedby y el mensaje
+  campoInvalido(campo: 'codigoMateria' | 'nombreMateria' | 'carrera' | 'creditos'): boolean {
+    const control = this.form.controls[campo];
+    return control.touched && control.invalid;
   }
 
   guardar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.mensaje.set('Revise los campos marcados antes de guardar.');
+      this.mensaje.set('materias.revisarCampos');
       return;
     }
 
@@ -59,9 +69,9 @@ export class MateriaListComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 409) {
-          this.mensaje.set('Ya existe una materia con ese código.');
+          this.mensaje.set('materias.errorDuplicado');
         } else {
-          this.mensaje.set(err?.error?.detail ?? 'No se pudo guardar la materia.');
+          this.mensaje.set(err?.error?.detail ?? 'materias.errorGuardar');
         }
       },
     });
@@ -83,12 +93,16 @@ export class MateriaListComponent implements OnInit {
   }
 
   eliminar(materia: Materia): void {
-    if (!confirm(`¿Eliminar ${materia.codigoMateria} - ${materia.nombreMateria}?`)) {
+    const pregunta = this.traductor.instant('materias.confirmarEliminar', {
+      codigo: materia.codigoMateria,
+      nombre: materia.nombreMateria,
+    });
+    if (!confirm(pregunta)) {
       return;
     }
     this.materiaService.eliminarMateria(materia.id).subscribe({
       next: () => this.materias.update((lista) => lista.filter((m) => m.id !== materia.id)),
-      error: (err) => this.mensaje.set(err?.error?.detail ?? 'No se pudo eliminar la materia.'),
+      error: (err) => this.mensaje.set(err?.error?.detail ?? 'materias.errorEliminar'),
     });
   }
 }

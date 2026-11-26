@@ -8,6 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DisponibilidadService } from '../../services/disponibilidad.service';
 import { DiaSemana, Disponibilidad } from '../../models/disponibilidad.model';
 
@@ -23,26 +24,22 @@ const horasValidator: ValidatorFn = (group: AbstractControl): ValidationErrors |
 
 @Component({
   selector: 'app-matriz-horarios',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './matriz-horarios.component.html',
+  styleUrl: './matriz-horarios.component.css',
 })
 export class MatrizHorariosComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private disponibilidadService = inject(DisponibilidadService);
+  private traductor = inject(TranslateService);
 
-  dias: { valor: DiaSemana; nombre: string }[] = [
-    { valor: 'MONDAY', nombre: 'Lunes' },
-    { valor: 'TUESDAY', nombre: 'Martes' },
-    { valor: 'WEDNESDAY', nombre: 'Miércoles' },
-    { valor: 'THURSDAY', nombre: 'Jueves' },
-    { valor: 'FRIDAY', nombre: 'Viernes' },
-    { valor: 'SATURDAY', nombre: 'Sábado' },
-    { valor: 'SUNDAY', nombre: 'Domingo' },
-  ];
+  // El nombre de cada día sale de las traducciones (dias.MONDAY, dias.TUESDAY, ...)
+  dias: DiaSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
   horas = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
   tutorId = signal<number | null>(null);
   bloques = signal<Disponibilidad[]>([]);
+  // Guarda la llave de traducción del mensaje (o el detalle que manda el backend)
   mensaje = signal('');
 
   form = this.fb.group(
@@ -60,7 +57,7 @@ export class MatrizHorariosComponent implements OnInit {
         this.tutorId.set(usuario.id);
         this.cargarBloques();
       },
-      error: () => this.mensaje.set('No se pudo obtener su usuario. Inicie sesión de nuevo.'),
+      error: () => this.mensaje.set('disponibilidad.errorUsuario'),
     });
   }
 
@@ -71,7 +68,7 @@ export class MatrizHorariosComponent implements OnInit {
     }
     this.disponibilidadService.obtenerDisponibilidad(id).subscribe({
       next: (data) => this.bloques.set(data),
-      error: (err) => this.mensaje.set(err?.error?.detail ?? 'No se pudo cargar su disponibilidad.'),
+      error: (err) => this.mensaje.set(err?.error?.detail ?? 'disponibilidad.errorCargar'),
     });
   }
 
@@ -93,15 +90,11 @@ export class MatrizHorariosComponent implements OnInit {
     );
   }
 
-  nombreDia(valor: DiaSemana): string {
-    return this.dias.find((d) => d.valor === valor)?.nombre ?? valor;
-  }
-
   agregar(): void {
     const id = this.tutorId();
     if (this.form.invalid || id === null) {
       this.form.markAllAsTouched();
-      this.mensaje.set('Revise los campos marcados antes de agregar.');
+      this.mensaje.set('disponibilidad.revisarCampos');
       return;
     }
 
@@ -113,9 +106,9 @@ export class MatrizHorariosComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 409) {
-          this.mensaje.set('Ese bloque choca con otro horario suyo del mismo día.');
+          this.mensaje.set('disponibilidad.errorChoque');
         } else {
-          this.mensaje.set(err?.error?.detail ?? 'No se pudo agregar el bloque.');
+          this.mensaje.set(err?.error?.detail ?? 'disponibilidad.errorAgregar');
         }
       },
     });
@@ -133,21 +126,26 @@ export class MatrizHorariosComponent implements OnInit {
         this.bloques.update((lista) => lista.map((b) => (b.id === actualizado.id ? actualizado : b))),
       error: (err) => {
         if (err.status === 409) {
-          this.mensaje.set('No se puede activar: choca con otro horario activo del mismo día.');
+          this.mensaje.set('disponibilidad.errorActivar');
         } else {
-          this.mensaje.set(err?.error?.detail ?? 'No se pudo cambiar el estado del bloque.');
+          this.mensaje.set(err?.error?.detail ?? 'disponibilidad.errorEstado');
         }
       },
     });
   }
 
   eliminar(bloque: Disponibilidad): void {
-    if (!confirm(`¿Eliminar el bloque del ${this.nombreDia(bloque.diaSemana)} de ${bloque.horaInicio} a ${bloque.horaFin}?`)) {
+    const pregunta = this.traductor.instant('disponibilidad.confirmarEliminar', {
+      dia: this.traductor.instant('dias.' + bloque.diaSemana),
+      inicio: bloque.horaInicio.substring(0, 5),
+      fin: bloque.horaFin.substring(0, 5),
+    });
+    if (!confirm(pregunta)) {
       return;
     }
     this.disponibilidadService.eliminarBloque(bloque.id).subscribe({
       next: () => this.bloques.update((lista) => lista.filter((b) => b.id !== bloque.id)),
-      error: (err) => this.mensaje.set(err?.error?.detail ?? 'No se pudo eliminar el bloque.'),
+      error: (err) => this.mensaje.set(err?.error?.detail ?? 'disponibilidad.errorEliminar'),
     });
   }
 }

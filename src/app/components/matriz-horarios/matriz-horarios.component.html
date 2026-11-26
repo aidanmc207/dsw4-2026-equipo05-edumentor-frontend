@@ -1,66 +1,122 @@
-<h2>Mi disponibilidad</h2>
+<main class="contenido">
+  <h1>{{ 'disponibilidad.titulo' | translate }}</h1>
 
-<p *ngIf="mensaje()" role="alert">{{ mensaje() }}</p>
+  <p class="alerta" role="alert" *ngIf="mensaje()">{{ mensaje() | translate }}</p>
 
-<table>
-  <caption>Horas en las que puede dar tutorías</caption>
-  <thead>
-    <tr>
-      <th scope="col">Hora</th>
-      <th scope="col" *ngFor="let dia of dias">{{ dia.nombre }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let hora of horas">
-      <th scope="row">{{ formatoHora(hora) }}</th>
-      <td *ngFor="let dia of dias">{{ estaDisponible(dia.valor, hora) ? 'Disponible' : '' }}</td>
-    </tr>
-  </tbody>
-</table>
+  <section class="panel">
+    <div class="tabla-scroll">
+      <table class="tabla matriz">
+        <caption>{{ 'disponibilidad.descripcion' | translate }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'disponibilidad.hora' | translate }}</th>
+            <th scope="col" *ngFor="let dia of dias">{{ 'dias.' + dia | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hora of horas">
+            <th scope="row">{{ formatoHora(hora) }}</th>
+            <td *ngFor="let dia of dias" [class.disponible]="estaDisponible(dia, hora)">
+              {{ estaDisponible(dia, hora) ? ('disponibilidad.disponible' | translate) : '' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-<h3>Mis bloques</h3>
+  <div class="columnas">
+    <section class="panel">
+      <h2>{{ 'disponibilidad.misBloques' | translate }}</h2>
 
-<p *ngIf="bloques().length === 0">Todavía no ha registrado bloques de horario.</p>
+      <p class="vacio" *ngIf="bloques().length === 0">{{ 'disponibilidad.sinBloques' | translate }}</p>
 
-<ul *ngIf="bloques().length > 0">
-  <li *ngFor="let bloque of bloques()">
-    {{ nombreDia(bloque.diaSemana) }} de {{ bloque.horaInicio.substring(0, 5) }} a {{ bloque.horaFin.substring(0, 5) }}
-    ({{ bloque.estaActivo ? 'activo' : 'inactivo' }})
-    <button type="button" (click)="cambiarEstado(bloque)">
-      {{ bloque.estaActivo ? 'Desactivar' : 'Activar' }}
-    </button>
-    <button type="button" (click)="eliminar(bloque)">Eliminar</button>
-  </li>
-</ul>
+      <ul class="bloques" *ngIf="bloques().length > 0">
+        <li *ngFor="let bloque of bloques()" [class.inactivo]="!bloque.estaActivo">
+          <span>
+            {{
+              'disponibilidad.bloque'
+                | translate
+                  : {
+                      dia: ('dias.' + bloque.diaSemana | translate),
+                      inicio: bloque.horaInicio.substring(0, 5),
+                      fin: bloque.horaFin.substring(0, 5),
+                    }
+            }}
+            <span class="estado">
+              ({{ (bloque.estaActivo ? 'disponibilidad.activo' : 'disponibilidad.inactivo') | translate }})
+            </span>
+          </span>
+          <span class="acciones">
+            <button type="button" class="secundario" (click)="cambiarEstado(bloque)">
+              {{ (bloque.estaActivo ? 'disponibilidad.desactivar' : 'disponibilidad.activar') | translate }}
+            </button>
+            <button type="button" class="peligro" (click)="eliminar(bloque)">
+              {{ 'comun.eliminar' | translate }}
+            </button>
+          </span>
+        </li>
+      </ul>
+    </section>
 
-<form [formGroup]="form" (ngSubmit)="agregar()">
-  <h3>Agregar bloque</h3>
+    <section class="panel">
+      <h2>{{ 'disponibilidad.agregarBloque' | translate }}</h2>
 
-  <label>
-    Día
-    <select formControlName="diaSemana">
-      <option *ngFor="let dia of dias" [value]="dia.valor">{{ dia.nombre }}</option>
-    </select>
-  </label>
+      <form [formGroup]="form" (ngSubmit)="agregar()" novalidate>
+        <div class="campo">
+          <label for="diaSemana">{{ 'disponibilidad.dia' | translate }}</label>
+          <select id="diaSemana" formControlName="diaSemana">
+            <option *ngFor="let dia of dias" [value]="dia">{{ 'dias.' + dia | translate }}</option>
+          </select>
+        </div>
 
-  <label>
-    Hora de inicio
-    <input type="time" formControlName="horaInicio" />
-  </label>
-  <p *ngIf="form.controls.horaInicio.touched && form.controls.horaInicio.invalid">
-    La hora de inicio es obligatoria.
-  </p>
+        <div class="campo">
+          <label for="horaInicio">{{ 'disponibilidad.horaInicio' | translate }}</label>
+          <input
+            id="horaInicio"
+            type="time"
+            formControlName="horaInicio"
+            [attr.aria-invalid]="form.controls.horaInicio.touched && form.controls.horaInicio.invalid"
+            [attr.aria-describedby]="
+              form.controls.horaInicio.touched && form.controls.horaInicio.invalid ? 'horaInicio-error' : null
+            "
+          />
+          <p
+            class="campo-error"
+            id="horaInicio-error"
+            *ngIf="form.controls.horaInicio.touched && form.controls.horaInicio.invalid"
+          >
+            {{ 'disponibilidad.errorInicio' | translate }}
+          </p>
+        </div>
 
-  <label>
-    Hora de fin
-    <input type="time" formControlName="horaFin" />
-  </label>
-  <p *ngIf="form.controls.horaFin.touched && form.controls.horaFin.invalid">
-    La hora de fin es obligatoria.
-  </p>
-  <p *ngIf="form.hasError('horasInvalidas')">
-    La hora de fin debe ser posterior a la hora de inicio.
-  </p>
+        <div class="campo">
+          <label for="horaFin">{{ 'disponibilidad.horaFin' | translate }}</label>
+          <input
+            id="horaFin"
+            type="time"
+            formControlName="horaFin"
+            [attr.aria-invalid]="
+              (form.controls.horaFin.touched && form.controls.horaFin.invalid) || form.hasError('horasInvalidas')
+            "
+            [attr.aria-describedby]="
+              form.controls.horaFin.touched && form.controls.horaFin.invalid
+                ? 'horaFin-error'
+                : form.hasError('horasInvalidas')
+                  ? 'horas-error'
+                  : null
+            "
+          />
+          <p class="campo-error" id="horaFin-error" *ngIf="form.controls.horaFin.touched && form.controls.horaFin.invalid">
+            {{ 'disponibilidad.errorFin' | translate }}
+          </p>
+          <p class="campo-error" id="horas-error" *ngIf="form.hasError('horasInvalidas')">
+            {{ 'disponibilidad.errorHoras' | translate }}
+          </p>
+        </div>
 
-  <button type="submit">Agregar</button>
-</form>
+        <button type="submit" class="principal">{{ 'disponibilidad.agregar' | translate }}</button>
+      </form>
+    </section>
+  </div>
+</main>
