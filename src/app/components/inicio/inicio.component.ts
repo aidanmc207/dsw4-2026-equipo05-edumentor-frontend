@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-inicio',
+  imports: [TranslatePipe],
   template: `
     <main class="contenido">
-      <h1>Hola, {{ nombre() }}</h1>
-      <p>Use el menú de arriba para ir a las materias y sus opciones.</p>
+      <h1>{{ 'inicio.saludo' | translate: { nombre: nombre() } }}</h1>
+      <p>{{ 'inicio.ayuda' | translate }}</p>
     </main>
   `,
   styles: `
