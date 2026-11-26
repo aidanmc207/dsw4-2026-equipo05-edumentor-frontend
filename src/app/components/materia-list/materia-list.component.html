@@ -1,71 +1,127 @@
-<main>
-<h1>Catálogo de materias</h1>
+<main class="contenido">
+  <h1>{{ 'materias.titulo' | translate }}</h1>
 
-<p *ngIf="mensaje()" role="alert">{{ mensaje() }}</p>
+  <p class="alerta" role="alert" *ngIf="mensaje()">{{ mensaje() | translate }}</p>
 
-<table *ngIf="materias().length > 0">
-  <caption>Materias disponibles para tutorías</caption>
-  <thead>
-    <tr>
-      <th scope="col">Código</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Carrera</th>
-      <th scope="col">Créditos</th>
-      <th scope="col" *ngIf="esCoordinador">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let materia of materias()">
-      <td>{{ materia.codigoMateria }}</td>
-      <td>{{ materia.nombreMateria }}</td>
-      <td>{{ materia.carrera }}</td>
-      <td>{{ materia.creditos }}</td>
-      <td *ngIf="esCoordinador">
-        <button type="button" (click)="editar(materia)">Editar</button>
-        <button type="button" (click)="eliminar(materia)">Eliminar</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <section class="panel">
+    <p class="vacio" *ngIf="materias().length === 0">{{ 'materias.sinMaterias' | translate }}</p>
 
-<p *ngIf="materias().length === 0">No hay materias registradas.</p>
+    <div class="tabla-scroll" *ngIf="materias().length > 0">
+      <table class="tabla">
+        <caption>{{ 'materias.descripcion' | translate }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'materias.codigo' | translate }}</th>
+            <th scope="col">{{ 'materias.nombre' | translate }}</th>
+            <th scope="col">{{ 'materias.carrera' | translate }}</th>
+            <th scope="col" class="numero">{{ 'materias.creditos' | translate }}</th>
+            <th scope="col" *ngIf="esCoordinador">{{ 'materias.acciones' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let materia of materias()" [class.editando]="editandoId() === materia.id">
+            <td>{{ materia.codigoMateria }}</td>
+            <td>{{ materia.nombreMateria }}</td>
+            <td>{{ materia.carrera }}</td>
+            <td class="numero">{{ materia.creditos }}</td>
+            <td *ngIf="esCoordinador">
+              <span class="acciones">
+                <button
+                  type="button"
+                  class="secundario"
+                  [attr.aria-label]="('materias.editar' | translate) + ' ' + materia.codigoMateria"
+                  (click)="editar(materia)"
+                >
+                  {{ 'materias.editar' | translate }}
+                </button>
+                <button
+                  type="button"
+                  class="peligro"
+                  [attr.aria-label]="('comun.eliminar' | translate) + ' ' + materia.codigoMateria"
+                  (click)="eliminar(materia)"
+                >
+                  {{ 'comun.eliminar' | translate }}
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-<form *ngIf="esCoordinador" [formGroup]="form" (ngSubmit)="guardar()">
-  <h2>{{ editandoId() === null ? 'Nueva materia' : 'Editar materia' }}</h2>
+  <section class="panel" *ngIf="esCoordinador">
+    <h2>{{ (editandoId() === null ? 'materias.nueva' : 'materias.editarTitulo') | translate }}</h2>
 
-  <label>
-    Código
-    <input type="text" formControlName="codigoMateria" />
-  </label>
-  <p *ngIf="form.controls.codigoMateria.touched && form.controls.codigoMateria.invalid">
-    El código es obligatorio y tiene máximo 10 caracteres.
-  </p>
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+      <div class="campos">
+        <div class="campo">
+          <label for="codigoMateria">{{ 'materias.codigo' | translate }}</label>
+          <input
+            id="codigoMateria"
+            type="text"
+            formControlName="codigoMateria"
+            [attr.aria-invalid]="campoInvalido('codigoMateria')"
+            [attr.aria-describedby]="campoInvalido('codigoMateria') ? 'codigoMateria-error' : null"
+          />
+          <p class="campo-error" id="codigoMateria-error" *ngIf="campoInvalido('codigoMateria')">
+            {{ 'materias.errorCodigo' | translate }}
+          </p>
+        </div>
 
-  <label>
-    Nombre
-    <input type="text" formControlName="nombreMateria" />
-  </label>
-  <p *ngIf="form.controls.nombreMateria.touched && form.controls.nombreMateria.invalid">
-    El nombre es obligatorio.
-  </p>
+        <div class="campo">
+          <label for="nombreMateria">{{ 'materias.nombre' | translate }}</label>
+          <input
+            id="nombreMateria"
+            type="text"
+            formControlName="nombreMateria"
+            [attr.aria-invalid]="campoInvalido('nombreMateria')"
+            [attr.aria-describedby]="campoInvalido('nombreMateria') ? 'nombreMateria-error' : null"
+          />
+          <p class="campo-error" id="nombreMateria-error" *ngIf="campoInvalido('nombreMateria')">
+            {{ 'materias.errorNombre' | translate }}
+          </p>
+        </div>
 
-  <label>
-    Carrera
-    <input type="text" formControlName="carrera" />
-  </label>
-  <p *ngIf="form.controls.carrera.touched && form.controls.carrera.invalid">
-    La carrera es obligatoria.
-  </p>
+        <div class="campo">
+          <label for="carrera">{{ 'materias.carrera' | translate }}</label>
+          <input
+            id="carrera"
+            type="text"
+            formControlName="carrera"
+            [attr.aria-invalid]="campoInvalido('carrera')"
+            [attr.aria-describedby]="campoInvalido('carrera') ? 'carrera-error' : null"
+          />
+          <p class="campo-error" id="carrera-error" *ngIf="campoInvalido('carrera')">
+            {{ 'materias.errorCarrera' | translate }}
+          </p>
+        </div>
 
-  <label>
-    Créditos
-    <input type="number" min="1" max="12" formControlName="creditos" />
-  </label>
-  <p *ngIf="form.controls.creditos.touched && form.controls.creditos.invalid">
-    Los créditos deben estar entre 1 y 12.
-  </p>
+        <div class="campo">
+          <label for="creditos">{{ 'materias.creditos' | translate }}</label>
+          <input
+            id="creditos"
+            type="number"
+            min="1"
+            max="12"
+            formControlName="creditos"
+            [attr.aria-invalid]="campoInvalido('creditos')"
+            [attr.aria-describedby]="campoInvalido('creditos') ? 'creditos-error' : null"
+          />
+          <p class="campo-error" id="creditos-error" *ngIf="campoInvalido('creditos')">
+            {{ 'materias.errorCreditos' | translate }}
+          </p>
+        </div>
+      </div>
 
-  <button type="submit">{{ editandoId() === null ? 'Agregar' : 'Guardar cambios' }}</button>
-  <button type="button" *ngIf="editandoId() !== null" (click)="cancelarEdicion()">Cancelar</button>
-</form>
+      <div class="acciones">
+        <button type="submit" class="principal">
+          {{ (editandoId() === null ? 'materias.agregar' : 'materias.guardarCambios') | translate }}
+        </button>
+        <button type="button" class="secundario" *ngIf="editandoId() !== null" (click)="cancelarEdicion()">
+          {{ 'comun.cancelar' | translate }}
+        </button>
+      </div>
+    </form>
+  </section>
 </main>

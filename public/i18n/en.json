@@ -65,5 +65,30 @@
     "errorEstado": "Could not change the block status.",
     "errorEliminar": "Could not delete the block.",
     "confirmarEliminar": "Delete the {{dia}} block from {{inicio}} to {{fin}}?"
+  },
+  "materias": {
+    "titulo": "Course catalog",
+    "descripcion": "Courses available for tutoring",
+    "codigo": "Code",
+    "nombre": "Name",
+    "carrera": "Program",
+    "creditos": "Credits",
+    "acciones": "Actions",
+    "editar": "Edit",
+    "sinMaterias": "There are no courses yet.",
+    "nueva": "New course",
+    "editarTitulo": "Edit course",
+    "agregar": "Add",
+    "guardarCambios": "Save changes",
+    "errorCodigo": "The code is required and has at most 10 characters.",
+    "errorNombre": "The name is required and has at most 100 characters.",
+    "errorCarrera": "The program is required and has at most 100 characters.",
+    "errorCreditos": "Credits must be between 1 and 12.",
+    "revisarCampos": "Check the highlighted fields before saving.",
+    "errorCargar": "The courses could not be loaded.",
+    "errorDuplicado": "A course with that code already exists.",
+    "errorGuardar": "The course could not be saved.",
+    "errorEliminar": "The course could not be deleted.",
+    "confirmarEliminar": "Delete {{codigo}} - {{nombre}}?"
   }
 }
