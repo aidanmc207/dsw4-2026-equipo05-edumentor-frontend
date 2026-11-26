@@ -1,0 +1,71 @@
+<main>
+<h1>Catálogo de materias</h1>
+
+<p *ngIf="mensaje()" role="alert">{{ mensaje() }}</p>
+
+<table *ngIf="materias().length > 0">
+  <caption>Materias disponibles para tutorías</caption>
+  <thead>
+    <tr>
+      <th scope="col">Código</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Carrera</th>
+      <th scope="col">Créditos</th>
+      <th scope="col" *ngIf="esCoordinador">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let materia of materias()">
+      <td>{{ materia.codigoMateria }}</td>
+      <td>{{ materia.nombreMateria }}</td>
+      <td>{{ materia.carrera }}</td>
+      <td>{{ materia.creditos }}</td>
+      <td *ngIf="esCoordinador">
+        <button type="button" (click)="editar(materia)">Editar</button>
+        <button type="button" (click)="eliminar(materia)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="materias().length === 0">No hay materias registradas.</p>
+
+<form *ngIf="esCoordinador" [formGroup]="form" (ngSubmit)="guardar()">
+  <h2>{{ editandoId() === null ? 'Nueva materia' : 'Editar materia' }}</h2>
+
+  <label>
+    Código
+    <input type="text" formControlName="codigoMateria" />
+  </label>
+  <p *ngIf="form.controls.codigoMateria.touched && form.controls.codigoMateria.invalid">
+    El código es obligatorio y tiene máximo 10 caracteres.
+  </p>
+
+  <label>
+    Nombre
+    <input type="text" formControlName="nombreMateria" />
+  </label>
+  <p *ngIf="form.controls.nombreMateria.touched && form.controls.nombreMateria.invalid">
+    El nombre es obligatorio.
+  </p>
+
+  <label>
+    Carrera
+    <input type="text" formControlName="carrera" />
+  </label>
+  <p *ngIf="form.controls.carrera.touched && form.controls.carrera.invalid">
+    La carrera es obligatoria.
+  </p>
+
+  <label>
+    Créditos
+    <input type="number" min="1" max="12" formControlName="creditos" />
+  </label>
+  <p *ngIf="form.controls.creditos.touched && form.controls.creditos.invalid">
+    Los créditos deben estar entre 1 y 12.
+  </p>
+
+  <button type="submit">{{ editandoId() === null ? 'Agregar' : 'Guardar cambios' }}</button>
+  <button type="button" *ngIf="editandoId() !== null" (click)="cancelarEdicion()">Cancelar</button>
+</form>
+</main>
