@@ -1,0 +1,17 @@
+<header class="barra">
+  <a class="marca" routerLink="/inicio">EduMentor Hub</a>
+
+  <nav aria-label="Menú principal">
+    <ul>
+      <li><a routerLink="/materias" routerLinkActive="activo">Materias</a></li>
+      @if (rol() === 'TUTOR') {
+        <li><a routerLink="/disponibilidad" routerLinkActive="activo">Mi disponibilidad</a></li>
+      }
+    </ul>
+  </nav>
+
+  <div class="usuario">
+    <span>{{ nombre() }}</span>
+    <button type="button" (click)="salir()">Cerrar sesión</button>
+  </div>
+</header>

@@ -1,9 +1,19 @@
 import { Routes } from '@angular/router';
-import { Login } from './paginas/login/login';
+import { LoginComponent } from './components/login/login.component';
+import { InicioComponent } from './components/inicio/inicio.component';
 import { MatrizHorariosComponent } from './components/matriz-horarios/matriz-horarios.component';
+import { sesionGuard } from './guards/sesion.guard';
+import { rolGuard } from './guards/rol.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: Login },
-  { path: 'disponibilidad', component: MatrizHorariosComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'inicio', component: InicioComponent, canActivate: [sesionGuard] },
+  {
+    path: 'disponibilidad',
+    component: MatrizHorariosComponent,
+    canActivate: [sesionGuard, rolGuard],
+    data: { roles: ['TUTOR'] },
+  },
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: '**', redirectTo: 'inicio' },
 ];
