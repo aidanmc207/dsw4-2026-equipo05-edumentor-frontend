@@ -8,7 +8,9 @@
   },
   "menu": {
     "materias": "Materias",
-    "miDisponibilidad": "Mi disponibilidad"
+    "miDisponibilidad": "Mi disponibilidad",
+    "principal": "Menú principal",
+    "cerrarSesion": "Cerrar sesión"
   },
   "login": {
     "titulo": "Iniciar sesión",
@@ -20,5 +22,9 @@
     "errorContrasena": "Ingrese la contraseña.",
     "errorCredenciales": "Correo o contraseña incorrectos.",
     "errorGeneral": "No se pudo iniciar sesión, intente de nuevo."
+  },
+  "inicio": {
+    "saludo": "Hola, {{nombre}}",
+    "ayuda": "Use el menú de arriba para ir a las materias y sus opciones."
   }
 }

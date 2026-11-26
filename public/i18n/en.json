@@ -8,7 +8,9 @@
   },
   "menu": {
     "materias": "Subjects",
-    "miDisponibilidad": "My availability"
+    "miDisponibilidad": "My availability",
+    "principal": "Main menu",
+    "cerrarSesion": "Sign out"
   },
   "login": {
     "titulo": "Sign in",
@@ -20,5 +22,9 @@
     "errorContrasena": "Enter your password.",
     "errorCredenciales": "Incorrect email or password.",
     "errorGeneral": "Could not sign in, please try again."
+  },
+  "inicio": {
+    "saludo": "Hello, {{nombre}}",
+    "ayuda": "Use the menu above to go to the subjects and their options."
   }
 }
