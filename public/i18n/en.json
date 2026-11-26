@@ -1,0 +1,24 @@
+{
+  "comun": {
+    "idioma": "Language",
+    "guardar": "Save",
+    "cancelar": "Cancel",
+    "eliminar": "Delete",
+    "cargando": "Loading..."
+  },
+  "menu": {
+    "materias": "Subjects",
+    "miDisponibilidad": "My availability"
+  },
+  "login": {
+    "titulo": "Sign in",
+    "correo": "Email",
+    "contrasena": "Password",
+    "ingresar": "Sign in",
+    "ingresando": "Signing in...",
+    "errorCorreo": "Enter a valid email.",
+    "errorContrasena": "Enter your password.",
+    "errorCredenciales": "Incorrect email or password.",
+    "errorGeneral": "Could not sign in, please try again."
+  }
+}
