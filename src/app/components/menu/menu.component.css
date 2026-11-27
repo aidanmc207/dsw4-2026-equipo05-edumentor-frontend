@@ -26,7 +26,10 @@ ul {
   list-style: none;
 }
 
+/* El padding deja los enlaces con al menos 24px de alto, como pide Lighthouse */
 nav a {
+  display: inline-block;
+  padding: 0.25rem 0;
   color: var(--color-texto);
   text-decoration: none;
 }
